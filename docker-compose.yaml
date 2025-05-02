@@ -8,6 +8,9 @@ x-environment: &environment
   DB_USERNAME: ${DB_USERNAME}
   DB_PASSWORD: ${DB_PASSWORD}
 
+  SHARED_JWT_SECRET_B64: ${SHARED_JWT_SECRET_B64} 
+  SHARED_JWT_ALGO: ${SHARED_JWT_ALGO}
+
 
 services:
   lm-balances-api:

@@ -22,7 +22,7 @@ def _env2int(key, default=None):
         raise ValueError(f"Cannot parse integer variable {key} (value: {val})")
 
 
-DEBUG: bool = _env2bool("DEBUG", "true")
+DEBUG: bool = _env2bool("DEBUG", "false")
 
 DB_HOST: str = os.getenv("DB_HOST")
 DB_NAME: str = os.getenv("DB_NAME")
