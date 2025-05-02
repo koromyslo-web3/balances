@@ -1,0 +1,38 @@
+version: "3.8"
+
+x-environment: &environment
+  DEBUG: ${DEBUG}
+
+  DB_HOST: ${DB_HOST}
+  DB_NAME: ${DB_NAME}
+  DB_USERNAME: ${DB_USERNAME}
+  DB_PASSWORD: ${DB_PASSWORD}
+
+
+services:
+  lm-balances-api:
+    container_name: lm-balances-api
+    build: ./src
+    volumes:
+      - ./src:/usr/app/src
+    ports:
+      - 8006:8000
+    environment:
+      <<: *environment
+    depends_on:
+      - lm-balances-postgres
+
+  lm-balances-postgres:
+    container_name: lm-balances-postgres
+    image: postgres:16
+    ports:
+      - 5436:5432
+    environment:
+      - POSTGRES_USER=${DB_USERNAME}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+    volumes:
+      - v_lm-balances-postgres:/var/lib/postgresql/data
+
+volumes:
+  v_lm-balances-postgres:
