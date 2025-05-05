@@ -30,5 +30,5 @@ DB_USERNAME: str = os.getenv("DB_USERNAME")
 DB_PASSWORD: str = os.getenv("DB_PASSWORD")
 DB_URL: str = f"postgresql+asyncpg://{DB_USERNAME}:{DB_PASSWORD}@{DB_HOST}/{DB_NAME}"
 
-SHARED_JWT_SECRET_B64: str = os.getenv("SHARED_JWT_SECRET_B64")
-SHARED_JWT_ALGO: str = os.getenv("SHARED_JWT_ALGO", "HS256")
+AUTH_JWT_PUBLIC_B64: str = os.getenv("AUTH_JWT_PUBLIC_B64")
+AUTH_JWT_ALGO: str = os.getenv("AUTH_JWT_ALGO", "HS256")

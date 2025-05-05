@@ -6,7 +6,7 @@ from jose import JWTError, jwt
 from pydantic import BaseModel, model_validator
 from web3.auto import w3
 
-from .config import DEBUG, SHARED_JWT_ALGO, SHARED_JWT_SECRET_B64
+from .config import DEBUG, AUTH_JWT_ALGO, AUTH_JWT_PUBLIC_B64
 from .api import balances
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/token")
@@ -16,13 +16,11 @@ async def authenticate(token_str: str = Depends(oauth2_scheme)):
     if not token_str:
         raise HTTPException(401)
     try:
-        decoded = jwt.decode(
-            token_str, SHARED_JWT_SECRET_B64, algorithms=[SHARED_JWT_ALGO]
-        )
+        decoded = jwt.decode(token_str, AUTH_JWT_PUBLIC_B64, algorithms=[AUTH_JWT_ALGO])
     except JWTError:
         raise HTTPException(401)
 
-    return decoded["service"]
+    return decoded
 
 
 docs = dict(docs_url=None, redoc_url=None, openapi_url=None) if not DEBUG else {}
@@ -66,16 +64,3 @@ async def update_bulk(
 @app.get("/", response_model=list[BalancesResponse])
 async def get(address: str = Query(), service: str = Depends(authenticate)):
     return await balances.get_balances(address)
-
-
-if DEBUG:
-
-    @app.post("/token")
-    async def new_token(service: str = Body("balances")):
-        print(SHARED_JWT_SECRET_B64)
-        token = jwt.encode(
-            {"service": service, "exp": int(time()) + 60 * 60},
-            SHARED_JWT_SECRET_B64,
-            SHARED_JWT_ALGO,
-        )
-        return {"access_token": token}
